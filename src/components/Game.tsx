@@ -158,12 +158,12 @@ export function Game() {
         </div>
         
         {/* Mobile: Compact next piece preview */}
-        <div className="sm:hidden fixed top-3 right-3 z-40">
+        <div className="sm:hidden fixed top-2 right-2 z-40">
           <PreviewBox pieces={gameState.nextPieces} count={1} />
         </div>
         
         {/* Mobile: Compact hold box */}
-        <div className="sm:hidden fixed top-3 left-3 z-40">
+        <div className="sm:hidden fixed top-2 left-2 z-40">
           <HoldBox piece={gameState.heldPiece} isLocked={!gameState.canHold} />
         </div>
       </div>

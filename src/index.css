@@ -400,46 +400,39 @@ body {
 
 .mobile-controls .swipe-area {
   position: absolute;
-  top: 0;
+  top: 120px;
   left: 0;
   right: 0;
-  bottom: 180px;
-  pointer-events: auto;
-}
-
-.mobile-controls .controls-top {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  display: flex;
-  justify-content: space-between;
+  bottom: 200px;
   pointer-events: auto;
 }
 
 .mobile-controls .controls-bottom {
   position: absolute;
-  bottom: 20px;
+  bottom: 24px;
   left: 16px;
   right: 16px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   pointer-events: auto;
 }
 
+/* Base button styles */
 .touch-control-btn {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   color: var(--color-text-secondary);
-  font-family: var(--font-display);
-  font-size: 10px;
-  padding: 12px 20px;
+  padding: 0;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .touch-control-btn:active,
@@ -450,64 +443,64 @@ body {
   transform: scale(0.95);
 }
 
-.touch-control-btn .btn-label {
-  font-size: 8px;
-  letter-spacing: 1px;
-}
-
-.touch-control-btn .btn-icon {
-  font-size: 24px;
-  line-height: 1;
+/* SVG icons */
+.touch-control-btn .btn-svg {
+  width: 28px;
+  height: 28px;
 }
 
 /* D-Pad */
 .dpad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
+  display: flex;
   gap: 8px;
-  width: 180px;
 }
 
 .dpad button {
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 54px;
+  height: 54px;
   border-radius: 14px;
 }
 
-.dpad button[class*="left"] {
-  grid-column: 1;
-  grid-row: 1;
+.dpad button .btn-svg {
+  width: 26px;
+  height: 26px;
 }
 
-.dpad button[class*="down"] {
-  grid-column: 2;
-  grid-row: 1;
+/* Hold button (center) */
+.hold-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(0, 245, 255, 0.1);
+  border-color: rgba(0, 245, 255, 0.3);
 }
 
-.dpad button[class*="right"] {
-  grid-column: 3;
-  grid-row: 1;
+.hold-btn .btn-svg {
+  width: 22px;
+  height: 22px;
+}
+
+.hold-btn:active,
+.hold-btn.active {
+  background: rgba(0, 245, 255, 0.25);
+  border-color: var(--color-accent-primary);
 }
 
 /* Action Buttons */
 .action-buttons {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .action-buttons button {
-  width: 72px;
-  height: 72px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
+}
+
+.action-buttons .btn-svg {
+  width: 30px;
+  height: 30px;
 }
 
 .action-buttons .rotate-btn {
@@ -534,6 +527,22 @@ body {
   color: var(--piece-z);
 }
 
+/* Pause button - positioned below Next preview */
+.pause-btn {
+  position: absolute;
+  top: 110px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  pointer-events: auto;
+}
+
+.pause-btn .btn-svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* Mobile-specific game layout */
 @media (max-width: 768px) {
   :root {
@@ -542,8 +551,9 @@ body {
   
   .game-container {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     padding: 8px;
+    padding-top: 100px;
     padding-bottom: 200px;
   }
   
