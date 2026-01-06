@@ -184,6 +184,160 @@ body {
   animation: lineClear 0.4s ease-out forwards;
 }
 
+/* ===== GAME EVENTS (Celebrations & Notifications) ===== */
+.game-event {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Tetris Celebration */
+.tetris-celebration {
+  animation: tetrisCelebration 1.5s ease-out forwards;
+}
+
+.tetris-celebration .tetris-text {
+  font-family: var(--font-display);
+  font-size: 48px;
+  color: var(--color-accent-gold);
+  text-shadow: 
+    0 0 20px var(--color-accent-gold),
+    0 0 40px var(--color-accent-gold),
+    0 0 60px var(--color-accent-gold);
+  animation: tetrisShake 0.1s ease-in-out 5;
+}
+
+.tetris-celebration .tetris-bonus {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--color-accent-success);
+  margin-top: 12px;
+  text-shadow: 0 0 10px var(--color-accent-success);
+  animation: fadeInUp 0.3s ease-out 0.2s both;
+}
+
+@keyframes tetrisCelebration {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes tetrisShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Level Up */
+.level-up {
+  animation: levelUpPop 1s ease-out forwards;
+}
+
+.level-up .level-up-text {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--color-accent-primary);
+  text-shadow: 0 0 20px var(--color-accent-primary);
+}
+
+.level-up .level-up-number {
+  font-family: var(--font-display);
+  font-size: 64px;
+  color: var(--color-accent-gold);
+  text-shadow: 
+    0 0 20px var(--color-accent-gold),
+    0 0 40px var(--color-accent-gold);
+  margin-top: 8px;
+  animation: numberPulse 0.3s ease-in-out 2;
+}
+
+@keyframes levelUpPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes numberPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Line Clear (Double/Triple) */
+.line-clear {
+  animation: lineClearPop 0.8s ease-out forwards;
+}
+
+.line-clear .clear-text {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--color-accent-primary);
+  text-shadow: 0 0 15px var(--color-accent-primary);
+}
+
+@keyframes lineClearPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Button styles */
 .btn {
   font-family: var(--font-display);

@@ -12,6 +12,7 @@ import {
   hardDrop,
   rotateClockwise,
   holdPiece,
+  clearEvent,
 } from '../game/gameState';
 import { getGhostPiece } from '../game/gameState';
 import { useGameLoop } from '../hooks/useGameLoop';
@@ -23,6 +24,7 @@ import { HoldBox } from './HoldBox';
 import { ScorePanel } from './ScorePanel';
 import { StartScreen, PauseScreen, GameOverScreen } from './Overlay';
 import { MobileControls } from './MobileControls';
+import { GameEvents } from './GameEvents';
 
 export function Game() {
   const [gameState, setGameState] = useState<GameData>(() => createGameState());
@@ -82,6 +84,10 @@ export function Game() {
       if (prev.state === 'paused') return resumeGame(prev);
       return prev;
     });
+  }, []);
+
+  const handleEventComplete = useCallback(() => {
+    setGameState(prev => clearEvent(prev));
   }, []);
 
   // Get ghost position
@@ -182,6 +188,12 @@ export function Game() {
           onPause={handleMobilePause}
         />
       )}
+
+      {/* Game Events (Tetris celebration, Level up, etc.) */}
+      <GameEvents 
+        event={gameState.lastEvent} 
+        onEventComplete={handleEventComplete} 
+      />
 
       {/* Overlays */}
       {gameState.state === 'paused' && (

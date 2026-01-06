@@ -7,7 +7,7 @@ import type { GameData, GameState, Piece, TetrominoType, Position, RotationState
 import { createEmptyBoard, canPlacePiece, lockPiece, findCompletedLines, clearLines, getGhostPosition as getBoardGhostPosition, isBlockOut, isLockOut, BOARD_HEIGHT, BOARD_BUFFER } from './board';
 import { createRandomizer, getNextPiece } from './randomizer';
 import { createPiece, getWallKicks } from './tetrominos';
-import { calculatePoints, calculateLevel, didLevelUp } from './scoring';
+import { calculatePoints, calculateLevel } from './scoring';
 
 /** Initial game state */
 export const INITIAL_GAME_STATE: GameData = {
@@ -20,6 +20,8 @@ export const INITIAL_GAME_STATE: GameData = {
   level: 1,
   lines: 0,
   state: 'idle',
+  lockResets: 0,
+  lastEvent: null,
 };
 
 /** Lock delay in milliseconds */
@@ -59,6 +61,8 @@ export function startGame(state: GameData): GameData {
     level: 1,
     lines: 0,
     state: 'playing',
+    lockResets: 0,
+    lastEvent: null,
   };
 }
 
@@ -231,6 +235,7 @@ export function holdPiece(state: GameData): GameData {
       heldPiece: currentType,
       nextPieces: newQueue,
       canHold: false,
+      lockResets: 0, // Reset lock counter for new piece
     };
   } else {
     // Swap with held piece
@@ -241,6 +246,7 @@ export function holdPiece(state: GameData): GameData {
       currentPiece: newPiece,
       heldPiece: currentType,
       canHold: false,
+      lockResets: 0, // Reset lock counter for new piece
     };
   }
 }
@@ -277,18 +283,32 @@ export function lockAndSpawn(state: GameData): GameData {
   const completedLines = findCompletedLines(newBoard);
   let newScore = state.score;
   let newLines = state.lines;
+  let lastEvent: GameData['lastEvent'] = null;
   
   if (completedLines.length > 0) {
     newBoard = clearLines(newBoard, completedLines);
+    const linesCleared = completedLines.length as 1 | 2 | 3 | 4;
     newScore += calculatePoints(
-      { type: 'lineClear', lines: completedLines.length as 1 | 2 | 3 | 4 },
+      { type: 'lineClear', lines: linesCleared },
       state.level
     );
     newLines += completedLines.length;
+    
+    // Set line clear event (Tetris celebration if 4 lines)
+    lastEvent = { 
+      type: 'lineClear', 
+      lines: linesCleared, 
+      isTetris: linesCleared === 4 
+    };
   }
   
   // Calculate new level
   const newLevel = calculateLevel(newLines);
+  
+  // Check for level up (overrides line clear event)
+  if (newLevel > state.level) {
+    lastEvent = { type: 'levelUp', newLevel };
+  }
   
   // Get next piece
   const [nextType, newQueue] = getNextPiece(state.nextPieces);
@@ -304,6 +324,8 @@ export function lockAndSpawn(state: GameData): GameData {
       currentPiece: null,
       nextPieces: newQueue,
       state: 'gameOver',
+      lockResets: 0,
+      lastEvent: null,
     };
   }
   
@@ -318,6 +340,8 @@ export function lockAndSpawn(state: GameData): GameData {
     lines: newLines,
     level: newLevel,
     canHold: true,
+    lockResets: 0, // Reset lock counter for new piece
+    lastEvent,
   };
 }
 
@@ -325,7 +349,28 @@ export function lockAndSpawn(state: GameData): GameData {
  * End the game
  */
 export function endGame(state: GameData): GameData {
-  return { ...state, state: 'gameOver' };
+  return { ...state, state: 'gameOver', lastEvent: null };
+}
+
+/**
+ * Clear the last event (after it's been displayed)
+ */
+export function clearEvent(state: GameData): GameData {
+  return { ...state, lastEvent: null };
+}
+
+/**
+ * Increment lock reset counter
+ * Returns true if reset is allowed, false if max reached
+ */
+export function incrementLockResets(state: GameData): { state: GameData; allowed: boolean } {
+  if (state.lockResets >= MAX_LOCK_RESETS) {
+    return { state, allowed: false };
+  }
+  return { 
+    state: { ...state, lockResets: state.lockResets + 1 }, 
+    allowed: true 
+  };
 }
 
 /**

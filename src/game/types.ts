@@ -44,6 +44,12 @@ export interface HighScore {
   date: string;
 }
 
+/** Event for UI notifications */
+export type GameEvent = 
+  | { type: 'lineClear'; lines: 1 | 2 | 3 | 4; isTetris: boolean }
+  | { type: 'levelUp'; newLevel: number }
+  | null;
+
 /** Complete game data */
 export interface GameData {
   board: Board;
@@ -55,4 +61,8 @@ export interface GameData {
   level: number;
   lines: number;
   state: GameState;
+  /** Number of lock delay resets used for current piece (max 15) */
+  lockResets: number;
+  /** Event to display (celebration, level-up, etc.) - cleared after display */
+  lastEvent: GameEvent;
 }

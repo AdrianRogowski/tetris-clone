@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import type { GameData } from '../game/types';
-import { tick, lockAndSpawn } from '../game/gameState';
+import { tick, lockAndSpawn, incrementLockResets, MAX_LOCK_RESETS } from '../game/gameState';
 import { getFallSpeed } from '../game/scoring';
 import { canPlacePiece } from '../game/board';
 
@@ -12,7 +12,7 @@ interface UseGameLoopOptions {
 export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
   const lastTickRef = useRef<number>(0);
   const lockTimerRef = useRef<number | null>(null);
-  const isLandedRef = useRef(false);
+  const lastPiecePositionRef = useRef<string | null>(null);
 
   // Check if piece is on ground
   const isPieceOnGround = useCallback(() => {
@@ -24,6 +24,13 @@ export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
       gameState.currentPiece.rotation
     );
   }, [gameState.board, gameState.currentPiece]);
+
+  // Get piece position key for tracking changes
+  const getPieceKey = useCallback(() => {
+    if (!gameState.currentPiece) return null;
+    const p = gameState.currentPiece;
+    return `${p.position.x},${p.position.y},${p.rotation}`;
+  }, [gameState.currentPiece]);
 
   // Game loop
   useEffect(() => {
@@ -41,18 +48,10 @@ export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
       if (delta >= fallSpeed) {
         lastTickRef.current = timestamp;
         
-        // Check if on ground before tick
-        const wasOnGround = isPieceOnGround();
-        
         setGameState(prev => {
           if (prev.state !== 'playing') return prev;
           return tick(prev);
         });
-
-        // If we're now on ground and weren't before, start lock timer
-        if (!wasOnGround && isPieceOnGround()) {
-          isLandedRef.current = true;
-        }
       }
 
       requestAnimationFrame(loop);
@@ -60,7 +59,7 @@ export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
 
     const frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [gameState.state, gameState.level, setGameState, isPieceOnGround]);
+  }, [gameState.state, gameState.level, setGameState]);
 
   // Lock timer when piece lands
   useEffect(() => {
@@ -69,10 +68,29 @@ export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
         clearTimeout(lockTimerRef.current);
         lockTimerRef.current = null;
       }
+      lastPiecePositionRef.current = null;
       return;
     }
 
     const onGround = isPieceOnGround();
+    const currentPieceKey = getPieceKey();
+    
+    // Check if piece moved/rotated while on ground
+    if (onGround && lockTimerRef.current && lastPiecePositionRef.current !== currentPieceKey) {
+      // Piece moved - reset lock timer if we haven't exceeded max resets
+      if (gameState.lockResets < MAX_LOCK_RESETS) {
+        clearTimeout(lockTimerRef.current);
+        lockTimerRef.current = null;
+        
+        // Increment lock reset counter
+        setGameState(prev => {
+          const { state: newState } = incrementLockResets(prev);
+          return newState;
+        });
+      }
+    }
+    
+    lastPiecePositionRef.current = currentPieceKey;
     
     if (onGround && !lockTimerRef.current) {
       lockTimerRef.current = window.setTimeout(() => {
@@ -93,5 +111,5 @@ export function useGameLoop({ gameState, setGameState }: UseGameLoopOptions) {
         lockTimerRef.current = null;
       }
     };
-  }, [gameState.state, gameState.currentPiece, isPieceOnGround, setGameState]);
+  }, [gameState.state, gameState.currentPiece, gameState.lockResets, isPieceOnGround, getPieceKey, setGameState]);
 }
