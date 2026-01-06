@@ -1,6 +1,6 @@
 /* Tetris - Retro Arcade Design System */
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
 
 :root {
   /* Game Background Colors */
@@ -234,4 +234,230 @@ body {
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: var(--spacing-2);
+}
+
+/* ===== MOBILE CONTROLS ===== */
+.mobile-controls {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.mobile-controls .swipe-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 180px;
+  pointer-events: auto;
+}
+
+.mobile-controls .controls-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+.mobile-controls .controls-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: auto;
+}
+
+.touch-control-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-display);
+  font-size: 10px;
+  padding: 12px 20px;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.1s ease;
+}
+
+.touch-control-btn:active,
+.touch-control-btn.active {
+  background: rgba(0, 245, 255, 0.2);
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  transform: scale(0.95);
+}
+
+.touch-control-btn .btn-label {
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.touch-control-btn .btn-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* D-Pad */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 8px;
+  width: 180px;
+}
+
+.dpad button {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+}
+
+.dpad button[class*="left"] {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.dpad button[class*="down"] {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.dpad button[class*="right"] {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.action-buttons button {
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.action-buttons .rotate-btn {
+  background: rgba(191, 0, 255, 0.15);
+  border-color: rgba(191, 0, 255, 0.4);
+}
+
+.action-buttons .rotate-btn:active,
+.action-buttons .rotate-btn.active {
+  background: rgba(191, 0, 255, 0.3);
+  border-color: var(--piece-t);
+  color: var(--piece-t);
+}
+
+.action-buttons .drop-btn {
+  background: rgba(255, 51, 102, 0.15);
+  border-color: rgba(255, 51, 102, 0.4);
+}
+
+.action-buttons .drop-btn:active,
+.action-buttons .drop-btn.active {
+  background: rgba(255, 51, 102, 0.3);
+  border-color: var(--piece-z);
+  color: var(--piece-z);
+}
+
+/* Mobile-specific game layout */
+@media (max-width: 768px) {
+  :root {
+    --cell-size: 18px;
+  }
+  
+  .game-container {
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px;
+    padding-bottom: 200px;
+  }
+  
+  .game-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .side-panel {
+    flex-direction: row;
+    gap: 8px;
+  }
+  
+  .side-panel .panel {
+    padding: 8px;
+    min-width: auto;
+  }
+  
+  .panel-title {
+    font-size: 6px;
+    margin-bottom: 4px;
+  }
+  
+  .score-value {
+    font-size: 14px !important;
+  }
+  
+  .level-value {
+    font-size: 16px !important;
+  }
+  
+  .lines-value {
+    font-size: 12px !important;
+  }
+  
+  /* Hide desktop control hints on mobile */
+  .desktop-controls-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --cell-size: 15px;
+  }
+  
+  .dpad button {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .action-buttons button {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .touch-control-btn .btn-icon {
+    font-size: 20px;
+  }
+}
+
+/* Prevent text selection and zoom on mobile */
+@media (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    touch-action: manipulation;
+  }
 }
