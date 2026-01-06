@@ -1,0 +1,101 @@
+---
+description: Design token usage guidelines for Tetris
+alwaysApply: true
+---
+
+# Design Tokens - Tetris
+
+This project uses a retro arcade design system defined in `.specs/design-system/tokens.md`.
+
+## Token Reference
+
+When implementing UI, use these token names rather than hardcoded values:
+
+### Game Colors
+- `color-void` - Deep black background (#0a0a0f)
+- `color-grid-bg` - Game board background (#12121a)
+- `color-grid-line` - Grid lines (#1e1e2e)
+- `color-chrome` - UI panel backgrounds (#16161e)
+
+### Tetromino Colors
+- `color-piece-i` - I-piece cyan (#00f5ff)
+- `color-piece-o` - O-piece yellow (#ffd700)
+- `color-piece-t` - T-piece purple (#bf00ff)
+- `color-piece-s` - S-piece green (#00ff66)
+- `color-piece-z` - Z-piece red (#ff3366)
+- `color-piece-j` - J-piece blue (#3366ff)
+- `color-piece-l` - L-piece orange (#ff9933)
+
+### UI Accents
+- `color-accent-primary` - Primary cyan (#00f5ff)
+- `color-accent-secondary` - Secondary red (#ff3366)
+- `color-accent-success` - Success green (#00ff66)
+- `color-accent-gold` - Gold for high scores (#ffd700)
+
+### Text Colors
+- `color-text-primary` - White (#ffffff)
+- `color-text-secondary` - Muted (#8888aa)
+- `color-text-dim` - Disabled (#444466)
+
+### Ghost Piece
+- `color-ghost` - Semi-transparent white (15%)
+- `color-ghost-border` - Ghost outline (30%)
+
+### Typography
+- `font-display` - 'Press Start 2P' for headings/game text
+- `font-mono` - 'JetBrains Mono' for stats
+- `text-xs` through `text-5xl` - Pixel-perfect scale (8px-48px)
+
+### Game Grid
+- `cell-size` - 28px (responsive: 20px mobile, 24px tablet)
+- `board-width` - 10 cells
+- `board-height` - 20 cells
+
+### Spacing
+- `spacing-1` through `spacing-16` - 4px to 64px scale
+
+### Effects
+- `glow-*` - Piece glow effects (per color)
+- `shadow-panel` - Panel shadows
+- `scanline-opacity` - CRT effect (0.03)
+
+## Implementation Guidelines
+
+### CSS Variables
+```css
+:root {
+  --color-void: #0a0a0f;
+  --color-grid-bg: #12121a;
+  --cell-size: 28px;
+  --piece-i: #00f5ff;
+  /* ... etc */
+}
+```
+
+### Tailwind Config
+```js
+colors: {
+  void: '#0a0a0f',
+  piece: {
+    i: '#00f5ff',
+    o: '#ffd700',
+    // ... etc
+  }
+}
+```
+
+## When Building UI
+
+1. Reference tokens from `.specs/design-system/tokens.md`
+2. Use token names in ASCII mockups
+3. Implement using CSS variables or Tailwind config
+4. Maintain the retro arcade aesthetic
+5. Apply CRT effects (scanlines, vignette) to outer container
+
+## Key Design Principles
+
+- Dark backgrounds with neon accents
+- Pixel-perfect fonts ('Press Start 2P')
+- Glow effects on tetrominos
+- CRT-inspired visual effects
+- High contrast for gameplay clarity

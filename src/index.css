@@ -1,0 +1,237 @@
+/* Tetris - Retro Arcade Design System */
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  /* Game Background Colors */
+  --color-void: #0a0a0f;
+  --color-grid-bg: #12121a;
+  --color-grid-line: #1e1e2e;
+  --color-chrome: #16161e;
+
+  /* Tetromino Colors */
+  --piece-i: #00f5ff;
+  --piece-o: #ffd700;
+  --piece-t: #bf00ff;
+  --piece-s: #00ff66;
+  --piece-z: #ff3366;
+  --piece-j: #3366ff;
+  --piece-l: #ff9933;
+
+  /* UI Accent Colors */
+  --color-accent-primary: #00f5ff;
+  --color-accent-secondary: #ff3366;
+  --color-accent-success: #00ff66;
+  --color-accent-gold: #ffd700;
+
+  /* Text Colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #8888aa;
+  --color-text-dim: #444466;
+
+  /* Ghost Piece */
+  --color-ghost: rgba(255, 255, 255, 0.15);
+  --color-ghost-border: rgba(255, 255, 255, 0.3);
+
+  /* Typography */
+  --font-display: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Game Grid */
+  --cell-size: 28px;
+  --cell-gap: 1px;
+  --cell-radius: 2px;
+
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+
+  /* Effects */
+  --glow-intensity: 0.6;
+  --scanline-opacity: 0.03;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-mono);
+  background: var(--color-void);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scanline effect overlay */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, var(--scanline-opacity)),
+    rgba(0, 0, 0, var(--scanline-opacity)) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* Vignette effect */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 99;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* Utility classes */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+/* Cell colors by piece type */
+.cell-i { background: var(--piece-i); box-shadow: 0 0 10px var(--piece-i), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-o { background: var(--piece-o); box-shadow: 0 0 10px var(--piece-o), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-t { background: var(--piece-t); box-shadow: 0 0 10px var(--piece-t), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-s { background: var(--piece-s); box-shadow: 0 0 10px var(--piece-s), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-z { background: var(--piece-z); box-shadow: 0 0 10px var(--piece-z), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-j { background: var(--piece-j); box-shadow: 0 0 10px var(--piece-j), inset 0 0 8px rgba(255,255,255,0.3); }
+.cell-l { background: var(--piece-l); box-shadow: 0 0 10px var(--piece-l), inset 0 0 8px rgba(255,255,255,0.3); }
+
+.cell-ghost {
+  background: var(--color-ghost);
+  border: 1px solid var(--color-ghost-border);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes flash {
+  0% { background: white; }
+  100% { background: transparent; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-blink { animation: blink 1s step-end infinite; }
+.animate-slide-in { animation: slideIn 0.3s ease-out; }
+.animate-scale-in { animation: scaleIn 0.2s ease-out; }
+
+/* Line clear animation */
+@keyframes lineClear {
+  0% { 
+    background: white;
+    transform: scaleY(1);
+  }
+  50% {
+    background: white;
+    transform: scaleY(1);
+  }
+  100% {
+    background: transparent;
+    transform: scaleY(0);
+  }
+}
+
+.line-clearing {
+  animation: lineClear 0.4s ease-out forwards;
+}
+
+/* Button styles */
+.btn {
+  font-family: var(--font-display);
+  font-size: 12px;
+  padding: var(--spacing-3) var(--spacing-6);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary {
+  background: var(--color-accent-primary);
+  color: var(--color-void);
+  border-color: var(--color-accent-primary);
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--color-accent-primary);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-text-secondary);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+}
+
+/* Panel styles */
+.panel {
+  background: var(--color-chrome);
+  border: 2px solid #2a2a3e;
+  border-radius: 4px;
+  padding: var(--spacing-4);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 8px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: var(--spacing-2);
+}
