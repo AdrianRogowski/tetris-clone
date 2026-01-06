@@ -251,13 +251,126 @@ And the board should be cleared
 And score, level, lines should reset
 ```
 
-### Scenario: View high scores
+### Scenario: View high scores (Phase 2)
 ```gherkin
 Given I am on the start screen or game over screen
 When I view high scores
 Then I should see the top 10 scores
 And scores should be stored locally
 And each entry should show score, level, and date
+```
+
+---
+
+## Mobile Experience
+
+Mobile devices use touch controls since there is no keyboard. The game detects touch capability or narrow viewport (<768px) and adapts the UI accordingly.
+
+### Scenario: Detect mobile device
+```gherkin
+Given the user opens the game
+When the device has touch capability
+Or the viewport width is less than 768px
+Then the game should display touch controls
+And the layout should adapt for mobile viewing
+```
+
+### Scenario: Mobile start screen
+```gherkin
+Given I am on the start screen on mobile
+Then I should see "Tap anywhere to start"
+And I should see "Touch controls enabled"
+And tapping anywhere on the screen should start the game
+```
+
+### Scenario: Mobile game layout
+```gherkin
+Given the game is running on mobile
+Then the game board should use smaller cells (15-18px)
+And the score/level/lines should appear in a compact row above the board
+And the Hold box should appear in the top-left corner
+And the Next piece preview should appear in the top-right corner
+And touch controls should appear at the bottom of the screen
+```
+
+### Scenario: D-pad movement controls
+```gherkin
+Given the game is running on mobile
+When I tap the Left button (◀)
+Then the piece should move one cell left
+When I tap the Right button (▶)
+Then the piece should move one cell right
+When I tap and hold a direction button
+Then the piece should auto-repeat movement after 170ms delay
+And continue moving every 50ms while held
+```
+
+### Scenario: Soft drop on mobile
+```gherkin
+Given the game is running on mobile
+When I tap the Down button (▼)
+Then the piece should move one cell down
+And I should earn 1 point per cell
+When I hold the Down button
+Then the piece should continuously soft drop
+```
+
+### Scenario: Rotate on mobile
+```gherkin
+Given the game is running on mobile
+When I tap the Rotate button (↻)
+Then the piece should rotate 90 degrees clockwise
+When I tap anywhere on the game board area
+Then the piece should rotate 90 degrees clockwise
+```
+
+### Scenario: Hard drop on mobile
+```gherkin
+Given the game is running on mobile
+When I tap the Hard Drop button (⬇)
+Then the piece should instantly drop to the ghost position
+And lock immediately
+And I should earn 2 points per cell dropped
+When I swipe down on the game board area
+Then the piece should hard drop
+```
+
+### Scenario: Hold piece on mobile
+```gherkin
+Given the game is running on mobile
+And I have not used hold this turn
+When I tap the Hold button
+Then the current piece should be stored in hold
+And the held piece (or next piece) should become active
+And the Hold button should appear dimmed until next piece
+```
+
+### Scenario: Pause on mobile
+```gherkin
+Given the game is running on mobile
+When I tap the Pause button (❚❚)
+Then the game should pause
+And the pause overlay should appear with Resume/Restart/Quit options
+```
+
+### Scenario: Mobile pause overlay
+```gherkin
+Given the game is paused on mobile
+Then the overlay buttons should be large enough for touch (44px+ touch targets)
+When I tap Resume
+Then the game should resume
+When I tap Restart
+Then a new game should begin
+When I tap Quit
+Then I should return to the start screen
+```
+
+### Scenario: Mobile game over
+```gherkin
+Given the game has ended on mobile
+Then the Game Over overlay should appear
+And the Play Again button should be prominent
+And buttons should be touch-friendly sized
 ```
 
 ---
@@ -524,31 +637,43 @@ And each entry should show score, level, and date
 │                                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
 │  │                                                                     │    │
-│  │  SCORE: 12,450   LEVEL: 5   LINES: 42   [≡] ← menu                 │    │
+│  │  ┌─ HOLD ──┐                                       ┌─ NEXT ──┐     │    │
+│  │  │  (dim   │   (fixed top-left)    (fixed top-right)│  ████  │[❚❚] │    │
+│  │  │  if     │                                       │  (next │     │    │
+│  │  │  used)  │                                       │  piece)│     │    │
+│  │  └─────────┘                                       └────────┘     │    │
 │  │                                                                     │    │
-│  │  ┌───────┐  ┌─────────────────────────────────┐  ┌───────┐         │    │
-│  │  │ HOLD  │  │                                 │  │ NEXT  │         │    │
-│  │  │  ██   │  │      GAME BOARD                 │  │ ████  │         │    │
-│  │  │  ██   │  │      (scaled to fit)            │  │       │         │    │
-│  │  └───────┘  │                                 │  │  ██   │         │    │
-│  │             │                                 │  │ ███   │         │    │
-│  │             │                                 │  └───────┘         │    │
-│  │             │                                 │                    │    │
-│  │             └─────────────────────────────────┘                    │    │
+│  │  ┌── STATS ROW ───────────────────────────────────────────────┐    │    │
+│  │  │  SCORE      │     LVL     │    LINES                       │    │    │
+│  │  │   12,450    │      5      │      42                        │    │    │
+│  │  └────────────────────────────────────────────────────────────┘    │    │
 │  │                                                                     │    │
-│  │  ┌─────────────────────────────────────────────────────────────┐   │    │
-│  │  │                     TOUCH CONTROLS                          │   │    │
-│  │  │                                                             │   │    │
-│  │  │    [HOLD]          [  ↻  ]          [DROP]                  │   │    │
-│  │  │                                                             │   │    │
-│  │  │    [ ← ]          [  ↓  ]          [ → ]                    │   │    │
-│  │  │                                                             │   │    │
-│  │  └─────────────────────────────────────────────────────────────┘   │    │
+│  │  ┌─────────────────────────────────────────────────────────┐       │    │
+│  │  │                                                         │       │    │
+│  │  │              GAME BOARD (15-18px cells)                 │       │    │
+│  │  │              - Tap anywhere to rotate                   │       │    │
+│  │  │              - Swipe down to hard drop                  │       │    │
+│  │  │                                                         │       │    │
+│  │  └─────────────────────────────────────────────────────────┘       │    │
 │  │                                                                     │    │
-│  │  Swipe: Left/Right = move, Down = soft drop, Up = hard drop        │    │
-│  │  Tap: Rotate                                                        │    │
+│  │  ┌─ BOTTOM CONTROLS ──────────────────────────────────────────┐    │    │
+│  │  │                                                            │    │    │
+│  │  │  ┌── D-PAD ──────┐              ┌── ACTION BUTTONS ──┐    │    │    │
+│  │  │  │               │              │                    │    │    │    │
+│  │  │  │  [◀] [▼] [▶]  │              │   (↻)      (⬇)     │    │    │    │
+│  │  │  │               │              │  rotate   hard     │    │    │    │
+│  │  │  │  (56x56px     │              │  (purple) drop     │    │    │    │
+│  │  │  │   buttons)    │              │           (red)    │    │    │    │
+│  │  │  └───────────────┘              │  (72x72px circles) │    │    │    │
+│  │  │                                 └────────────────────┘    │    │    │
+│  │  └────────────────────────────────────────────────────────────┘    │    │
 │  │                                                                     │    │
 │  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+│  Touch Interactions:                                                        │
+│  - Tap board area: Rotate clockwise                                         │
+│  - Swipe down on board: Hard drop                                           │
+│  - D-pad buttons support tap AND hold (with DAS repeat)                     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -588,16 +713,24 @@ And each entry should show score, level, and date
 
 ## Component References
 
-| Component | Status | File |
-|-----------|--------|------|
-| GameBoard | 📝 Stub created | `.specs/design-system/components/game-board.md` |
-| Tetromino | 📝 Stub created | `.specs/design-system/components/tetromino.md` |
-| Cell | 📝 Stub created | `.specs/design-system/components/cell.md` |
-| PreviewBox | 📝 Stub created | `.specs/design-system/components/preview-box.md` |
-| HoldBox | 📝 Stub created | `.specs/design-system/components/hold-box.md` |
-| ScorePanel | 📝 Stub created | `.specs/design-system/components/score-panel.md` |
-| Button | 📝 Stub created | `.specs/design-system/components/button.md` |
-| Overlay | 📝 Stub created | `.specs/design-system/components/overlay.md` |
+| Component | Status | Source File | Spec File |
+|-----------|--------|-------------|-----------|
+| Game | ✅ Implemented | `src/components/Game.tsx` | - |
+| GameBoard | ✅ Implemented | `src/components/GameBoard.tsx` | `.specs/design-system/components/game-board.md` |
+| Cell | ✅ Implemented | `src/components/Cell.tsx` | `.specs/design-system/components/cell.md` |
+| PreviewBox | ✅ Implemented | `src/components/PreviewBox.tsx` | `.specs/design-system/components/preview-box.md` |
+| HoldBox | ✅ Implemented | `src/components/HoldBox.tsx` | `.specs/design-system/components/hold-box.md` |
+| ScorePanel | ✅ Implemented | `src/components/ScorePanel.tsx` | `.specs/design-system/components/score-panel.md` |
+| Overlay | ✅ Implemented | `src/components/Overlay.tsx` | `.specs/design-system/components/overlay.md` |
+| MobileControls | ✅ Implemented | `src/components/MobileControls.tsx` | `.specs/design-system/components/mobile-controls.md` |
+
+### Hooks
+
+| Hook | Status | Source File |
+|------|--------|-------------|
+| useGameLoop | ✅ Implemented | `src/hooks/useGameLoop.ts` |
+| useKeyboardControls | ✅ Implemented | `src/hooks/useKeyboardControls.ts` |
+| useMobile / useTouchDevice | ✅ Implemented | `src/hooks/useMobile.ts` |
 
 ---
 

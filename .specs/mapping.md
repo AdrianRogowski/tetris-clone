@@ -17,17 +17,17 @@ This file links feature specifications to their tests and source components.
 
 | Feature Spec | Test Suite | Source File(s) | Status |
 |--------------|------------|----------------|--------|
-| `.specs/features/game/tetris-core.feature.md` | Multiple (see below) | `src/game/` | 📝 |
+| `.specs/features/game/tetris-core.feature.md` | Multiple (see below) | `src/game/`, `src/components/` | ✅ |
 
 ### Test Suite Breakdown
 
-| Test Suite Doc | Test File | Tests | Passing |
-|----------------|-----------|-------|---------|
-| `.specs/test-suites/game/tetrominos.tests.md` | `src/game/tetrominos.test.ts` | 35 | 0% |
-| `.specs/test-suites/game/board.tests.md` | `src/game/board.test.ts` | 47 | 4% |
-| `.specs/test-suites/game/scoring.tests.md` | `src/game/scoring.test.ts` | 43 | 30% |
-| `.specs/test-suites/game/randomizer.tests.md` | `src/game/randomizer.test.ts` | 29 | 7% |
-| `.specs/test-suites/game/gameState.tests.md` | `src/game/gameState.test.ts` | 66 | 14% |
+| Test Suite Doc | Test File | Tests | Status |
+|----------------|-----------|-------|--------|
+| `.specs/test-suites/game/tetrominos.tests.md` | `src/game/tetrominos.test.ts` | 36 | ✅ 100% |
+| `.specs/test-suites/game/board.tests.md` | `src/game/board.test.ts` | 47 | ✅ 100% |
+| `.specs/test-suites/game/scoring.tests.md` | `src/game/scoring.test.ts` | 43 | ✅ 100% |
+| `.specs/test-suites/game/randomizer.tests.md` | `src/game/randomizer.test.ts` | 29 | ✅ 100% |
+| `.specs/test-suites/game/gameState.tests.md` | `src/game/gameState.test.ts` | 66 | ✅ 100% |
 
 ---
 
@@ -35,14 +35,22 @@ This file links feature specifications to their tests and source components.
 
 | Component | Doc File | Source File | Status |
 |-----------|----------|-------------|--------|
-| GameBoard | `.specs/design-system/components/game-board.md` | `src/components/GameBoard.tsx` | 📝 |
-| Tetromino | `.specs/design-system/components/tetromino.md` | `src/components/Tetromino.tsx` | 📝 |
-| Cell | `.specs/design-system/components/cell.md` | `src/components/Cell.tsx` | 📝 |
-| PreviewBox | `.specs/design-system/components/preview-box.md` | `src/components/PreviewBox.tsx` | 📝 |
-| HoldBox | `.specs/design-system/components/hold-box.md` | `src/components/HoldBox.tsx` | 📝 |
-| ScorePanel | `.specs/design-system/components/score-panel.md` | `src/components/ScorePanel.tsx` | 📝 |
-| Button | `.specs/design-system/components/button.md` | `src/components/Button.tsx` | 📝 |
-| Overlay | `.specs/design-system/components/overlay.md` | `src/components/Overlay.tsx` | 📝 |
+| Game | - | `src/components/Game.tsx` | ✅ |
+| GameBoard | `.specs/design-system/components/game-board.md` | `src/components/GameBoard.tsx` | ✅ |
+| Cell | `.specs/design-system/components/cell.md` | `src/components/Cell.tsx` | ✅ |
+| PreviewBox | `.specs/design-system/components/preview-box.md` | `src/components/PreviewBox.tsx` | ✅ |
+| HoldBox | `.specs/design-system/components/hold-box.md` | `src/components/HoldBox.tsx` | ✅ |
+| ScorePanel | `.specs/design-system/components/score-panel.md` | `src/components/ScorePanel.tsx` | ✅ |
+| Overlay | `.specs/design-system/components/overlay.md` | `src/components/Overlay.tsx` | ✅ |
+| MobileControls | `.specs/design-system/components/mobile-controls.md` | `src/components/MobileControls.tsx` | ✅ |
+
+### Hooks
+
+| Hook | Source File | Status |
+|------|-------------|--------|
+| useGameLoop | `src/hooks/useGameLoop.ts` | ✅ |
+| useKeyboardControls | `src/hooks/useKeyboardControls.ts` | ✅ |
+| useMobile / useTouchDevice | `src/hooks/useMobile.ts` | ✅ |
 
 ---
 
@@ -50,25 +58,25 @@ This file links feature specifications to their tests and source components.
 
 | Module | Source File | Test File | Status |
 |--------|-------------|-----------|--------|
-| Types | `src/game/types.ts` | - | 📝 (no tests needed) |
-| Tetrominos | `src/game/tetrominos.ts` | `src/game/tetrominos.test.ts` | 📝 |
-| Board | `src/game/board.ts` | `src/game/board.test.ts` | 📝 |
-| Scoring | `src/game/scoring.ts` | `src/game/scoring.test.ts` | 📝 |
-| Randomizer | `src/game/randomizer.ts` | `src/game/randomizer.test.ts` | 📝 |
-| Game State | `src/game/gameState.ts` | `src/game/gameState.test.ts` | 📝 |
+| Types | `src/game/types.ts` | - | ✅ (no tests needed) |
+| Tetrominos | `src/game/tetrominos.ts` | `src/game/tetrominos.test.ts` | ✅ |
+| Board | `src/game/board.ts` | `src/game/board.test.ts` | ✅ |
+| Scoring | `src/game/scoring.ts` | `src/game/scoring.test.ts` | ✅ |
+| Randomizer | `src/game/randomizer.ts` | `src/game/randomizer.test.ts` | ✅ |
+| Game State | `src/game/gameState.ts` | `src/game/gameState.test.ts` | ✅ |
 
 ---
 
 ## Test Coverage Summary
 
-| Category | Total | Covered | Percentage |
+| Category | Total | Passing | Percentage |
 |----------|-------|---------|------------|
-| Features | 1 | 0 | 0% |
-| Game Logic Tests | 220 | 0 | 0% (failing - TDD) |
-| Components | 8 | 0 | 0% |
-| **Total** | **229** | **0** | **0%** |
-
-**Note**: Tests are intentionally failing as part of TDD workflow. Implementation pending.
+| Tetrominos | 36 | 36 | 100% |
+| Board | 47 | 47 | 100% |
+| Scoring | 43 | 43 | 100% |
+| Randomizer | 29 | 29 | 100% |
+| Game State | 66 | 66 | 100% |
+| **Total** | **221** | **221** | **100%** |
 
 ---
 
@@ -91,6 +99,7 @@ This file links feature specifications to their tests and source components.
 | 7-bag randomization | randomizer.test.ts | UT-RND-001 to UT-RND-029 |
 | Pause/Resume | gameState.test.ts | UT-GS-018 to UT-GS-023 |
 | Game over | gameState.test.ts, board.test.ts | UT-GS-056 to UT-GS-062, UT-BRD-042 to UT-BRD-047 |
+| **Mobile controls** | - | UI tests pending |
 
 ---
 
@@ -101,9 +110,34 @@ This file links feature specifications to their tests and source components.
 | 2026-01-06 | Created Tetris core feature spec | `tetris-core.feature.md` |
 | 2026-01-06 | Customized design tokens for arcade theme | `tokens.md` |
 | 2026-01-06 | Created 8 component stubs | `components/*.md` |
-| 2026-01-06 | Created game logic stub modules | `src/game/*.ts` |
-| 2026-01-06 | Created 220 failing unit tests | `src/game/*.test.ts` |
-| 2026-01-06 | Documented test suites | `.specs/test-suites/game/*.tests.md` |
+| 2026-01-06 | Created game logic modules | `src/game/*.ts` |
+| 2026-01-06 | Implemented all game logic (221 tests passing) | `src/game/*.ts` |
+| 2026-01-06 | Built React UI components | `src/components/*.tsx` |
+| 2026-01-06 | Added mobile touch controls | `src/components/MobileControls.tsx` |
+| 2026-01-06 | Added mobile experience spec | `tetris-core.feature.md` |
+| 2026-01-06 | Created MobileControls component doc | `mobile-controls.md` |
+
+---
+
+## Pending Work
+
+### Phase 1 (Core) - ✅ Complete
+- [x] Game logic implementation
+- [x] UI components
+- [x] Keyboard controls
+- [x] Mobile touch controls
+
+### Phase 2 (Enhancements) - Pending
+- [ ] High scores (localStorage persistence)
+- [ ] Tetris celebration animation (4-line clear)
+- [ ] Level-up notification
+- [ ] Lock delay reset counter (max 15)
+- [ ] Sound effects
+
+### UI Tests Needed
+- [ ] Mobile controls integration tests
+- [ ] Touch gesture tests
+- [ ] Responsive layout tests
 
 ---
 
