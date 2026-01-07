@@ -67,6 +67,8 @@ export function useMultiplayerSocket(options: UsePartySocketOptions): UsePartySo
     onClose() {
       console.log(`[PartyKit] Disconnected from room: ${roomCode}`);
       setStatus('disconnected');
+      // Reset join flag so we re-join on reconnect
+      hasJoined.current = false;
     },
     onError(error) {
       console.error(`[PartyKit] Error:`, error);

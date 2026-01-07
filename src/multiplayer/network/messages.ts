@@ -81,7 +81,7 @@ export interface NetworkPlayer {
 export interface RoomStateMessage {
   type: 'roomState';
   roomCode: string;
-  hostId: PlayerId;
+  hostId: PlayerId | null;
   players: NetworkPlayer[];
   isStarting: boolean;
   countdown: number | null;
@@ -297,7 +297,8 @@ export function isValidServerMessage(message: unknown): message is ServerMessage
   // Validate specific message types
   switch (msg.type) {
     case 'roomState':
-      return typeof msg.roomCode === 'string' && typeof msg.hostId === 'string' && Array.isArray(msg.players);
+      // hostId can be null when room is empty
+      return typeof msg.roomCode === 'string' && (msg.hostId === null || typeof msg.hostId === 'string') && Array.isArray(msg.players);
     case 'playerJoined':
       return typeof msg.player === 'object' && msg.player !== null;
     case 'playerLeft':
