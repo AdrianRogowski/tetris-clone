@@ -65,8 +65,8 @@ interface OnlineGameProps {
   onBack: () => void;
 }
 
-// Default PartyKit host - change this after deploying
-const PARTY_HOST = 'localhost:1999';
+// PartyKit host - uses env variable in production, localhost for dev
+const PARTY_HOST = import.meta.env.VITE_PARTY_HOST || 'localhost:1999';
 
 /**
  * Connected Game - Only renders when we have a valid room code
