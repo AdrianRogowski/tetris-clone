@@ -65,8 +65,8 @@ interface OnlineGameProps {
   onBack: () => void;
 }
 
-// PartyKit host - uses env variable in production, localhost for dev
-const PARTY_HOST = import.meta.env.VITE_PARTY_HOST || 'localhost:1999';
+// PartyKit host - uses env variable in production, deployed URL as fallback
+const PARTY_HOST = import.meta.env.VITE_PARTY_HOST || 'tetris-multiplayer.adrianrogowski.partykit.dev';
 
 /**
  * Connected Game - Only renders when we have a valid room code
