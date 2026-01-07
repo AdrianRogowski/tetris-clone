@@ -8,9 +8,10 @@ interface GameBoardProps {
   currentPiece: Piece | null;
   ghostPosition: Position | null;
   clearingLines?: number[];
+  cellSize?: number; // Override default cell size for responsive layouts
 }
 
-export function GameBoard({ board, currentPiece, ghostPosition, clearingLines = [] }: GameBoardProps) {
+export function GameBoard({ board, currentPiece, ghostPosition, clearingLines = [], cellSize }: GameBoardProps) {
   // Get current piece cells
   const pieceCells = currentPiece 
     ? getPieceCells(currentPiece.type, currentPiece.position, currentPiece.rotation)
@@ -69,13 +70,20 @@ export function GameBoard({ board, currentPiece, ghostPosition, clearingLines = 
     );
   }
 
+  // Apply custom cell size via CSS variable
+  const style: React.CSSProperties = { 
+    background: 'var(--color-grid-bg)',
+    boxShadow: '0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.3)',
+  };
+  
+  if (cellSize) {
+    style['--cell-size' as string] = `${cellSize}px`;
+  }
+
   return (
     <div 
-      className="panel p-2 inline-block"
-      style={{ 
-        background: 'var(--color-grid-bg)',
-        boxShadow: '0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(0, 0, 0, 0.3)',
-      }}
+      className="game-board panel p-2 inline-block"
+      style={style}
     >
       <div className="flex flex-col gap-[var(--cell-gap)]">
         {visibleRows}

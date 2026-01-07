@@ -395,36 +395,167 @@ And showing which player paused
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Mobile Multiplayer (Spectator Only on Mobile)
+### Mobile Multiplayer (Full Support)
 
-```
-┌─ MOBILE SPECTATOR ──────────────────────┐
-│                                         │
-│           SPECTATING                    │
-│                                         │
-│  ┌─ P1 ─────────┐  ┌─ P2 ─────────┐    │
-│  │ Score: 8,200 │  │ Score: 6,100 │    │
-│  │ ┌─────────┐  │  │ ┌─────────┐  │    │
-│  │ │ (mini   │  │  │ │ (mini   │  │    │
-│  │ │  board) │  │  │ │  board) │  │    │
-│  │ └─────────┘  │  │ └─────────┘  │    │
-│  └──────────────┘  └──────────────┘    │
-│                                         │
-│  ┌─ P3 ─────────┐  ┌─ P4 ─────────┐    │
-│  │ Score: 4,800 │  │   ╳ OUT      │    │
-│  │ ┌─────────┐  │  │              │    │
-│  │ │ (mini   │  │  │              │    │
-│  │ │  board) │  │  │              │    │
-│  │ └─────────┘  │  │              │    │
-│  └──────────────┘  └──────────────┘    │
-│                                         │
-│              [ LEAVE ]                  │
-│                                         │
-└─────────────────────────────────────────┘
+Mobile users can fully participate in multiplayer with an optimized vertical layout.
 
-Note: Mobile users can spectate but not play 
-multiplayer (no room for 2+ boards + controls)
+#### Mobile Lobby
 ```
+┌─ MOBILE LOBBY ─────────────────┐
+│                                │
+│         GAME LOBBY             │  ← color-accent-primary
+│                                │
+│  ┌──────────────────────────┐  │
+│  │   Room Code (tap copy)   │  │
+│  │      [ A 3 X 7 K 2 ]     │  │  ← color-accent-gold
+│  └──────────────────────────┘  │
+│                                │
+│         ● CONNECTED            │  ← color-accent-success
+│                                │
+│  ┌──────────────────────────┐  │
+│  │ PLAYERS (2/4)            │  │
+│  │                          │  │
+│  │ ★ Player1 (you)    HOST  │  │  ← Your row highlighted
+│  │   ✓ READY                │  │
+│  │                          │  │
+│  │ ○ Player2                │  │
+│  │   NOT READY              │  │
+│  │                          │  │
+│  │ ┄┄ Waiting... ┄┄         │  │
+│  │ ┄┄ Waiting... ┄┄         │  │
+│  └──────────────────────────┘  │
+│                                │
+│  ┌────────┐    ┌────────────┐  │
+│  │ LEAVE  │    │   READY    │  │
+│  └────────┘    └────────────┘  │
+│                                │
+│  ┌──────────────────────────┐  │
+│  │       START GAME         │  │  ← Host only, when all ready
+│  └──────────────────────────┘  │
+│                                │
+└────────────────────────────────┘
+```
+
+#### Mobile Game Layout
+```
+┌─ MOBILE MULTIPLAYER GAME ──────┐
+│                                │
+│  ┌─ OPPONENTS ───────────────┐ │  ← Horizontal scroll if >2
+│  │ ┌────────┐  ┌────────┐    │ │
+│  │ │ P2  42 │  │ P3  18 │    │ │  ← Mini boards (6x12 cells)
+│  │ │┌──────┐│  │┌──────┐│    │ │
+│  │ ││ mini ││  ││ mini ││    │ │
+│  │ ││board ││  ││board ││    │ │
+│  │ │└──────┘│  │└──────┘│    │ │
+│  │ └────────┘  └────────┘    │ │
+│  └───────────────────────────┘ │
+│                                │
+│  ┌─ STATS ─┐  ┌─ NEXT ──────┐  │
+│  │ 12,400  │  │  ▓▓  T      │  │
+│  │ LVL 3   │  │  ▓▓  O      │  │
+│  │ 24 LNS  │  │  ▓   L      │  │
+│  └─────────┘  └─────────────┘  │
+│                                │
+│  ┌──────────────────────────┐  │
+│  │ ┃                        │  │  ← Garbage indicator (left edge)
+│  │ ┃  ┌─────────────────┐   │  │
+│  │ ┃  │                 │   │  │
+│  │ ┃  │   YOUR BOARD    │   │  │  ← 10x20, cell-size: 16-20px
+│  │ ┃  │   (playable)    │   │  │
+│  │ ┃  │                 │   │  │
+│  │ ┃  │    ▓▓▓          │   │  │
+│  │ ┃  │     ▓           │   │  │
+│  │    └─────────────────┘   │  │
+│  └──────────────────────────┘  │
+│                                │
+│  ┌──────────────────────────┐  │
+│  │   ◄    ▼    ►      ↻  ⬇  │  │  ← Touch controls
+│  │  LEFT DOWN RIGHT  ROT DRP │  │
+│  │                          │  │
+│  │       [ HOLD ]  [ ⏸ ]    │  │
+│  └──────────────────────────┘  │
+│                                │
+└────────────────────────────────┘
+```
+
+#### Mobile Target Selector (Collapsed)
+```
+┌─ TARGET MODE (tap to expand) ──┐
+│  🎲 Random  ▼                  │
+└────────────────────────────────┘
+
+┌─ TARGET MODE (expanded) ───────┐
+│  🎲 Random      ← selected     │
+│  🏆 Badges                     │
+│  ⚔️ Attacker                   │
+│  📉 Lowest                     │
+└────────────────────────────────┘
+```
+
+#### Mobile Results Screen
+```
+┌─ MOBILE RESULTS ───────────────┐
+│                                │
+│           GAME OVER            │
+│                                │
+│         🏆 2nd PLACE           │  ← Your placement
+│                                │
+│  ┌──────────────────────────┐  │
+│  │  STANDINGS               │  │
+│  │                          │  │
+│  │  1. Player3    15,200    │  │  ← Winner highlighted gold
+│  │  2. You        12,400    │  │  ← Your row highlighted
+│  │  3. Player2     8,100    │  │
+│  │  4. Player4     3,200    │  │
+│  └──────────────────────────┘  │
+│                                │
+│  ┌──────────────────────────┐  │
+│  │       PLAY AGAIN         │  │
+│  └──────────────────────────┘  │
+│  ┌──────────────────────────┐  │
+│  │        LEAVE             │  │
+│  └──────────────────────────┘  │
+│                                │
+└────────────────────────────────┘
+```
+
+#### Responsive Breakpoints
+
+| Breakpoint | Width | Layout | Cell Size |
+|------------|-------|--------|-----------|
+| Desktop | ≥1024px | Side-by-side (board + opponents right) | 28px |
+| Tablet | 768-1023px | Side-by-side (compact) | 24px |
+| Mobile | <768px | Stacked vertical | 16-20px |
+
+#### Mobile-Specific Behavior
+
+1. **Opponent Boards**
+   - Displayed in horizontal scrollable row at top
+   - Mini size: ~6 cells wide × 12 cells tall
+   - Shows player name + score overlay
+   - Tap to expand (future enhancement)
+
+2. **Stats Panel**
+   - Compact horizontal layout
+   - Score, Level, Lines in single row
+   - No hold box on mobile (use HOLD button)
+
+3. **Touch Controls**
+   - Same controls as solo mobile game
+   - D-pad: Left, Down, Right
+   - Action buttons: Rotate, Hard Drop
+   - Utility: Hold, Pause
+   - Swipe down on board = hard drop
+   - Tap board = rotate
+
+4. **Target Selector**
+   - Collapsed by default (saves space)
+   - Tap to expand dropdown
+   - Shows current mode with icon
+
+5. **Garbage Indicator**
+   - Thin bar on left edge of board
+   - Same behavior as desktop
 
 ---
 
@@ -522,11 +653,11 @@ multiplayer (no room for 2+ boards + controls)
 
 ## Open Questions
 
-- [ ] Should we require a backend server or use P2P?
+- [x] Should we require a backend server or use P2P? → **PartyKit (serverless WebSocket)**
 - [ ] What's the maximum acceptable latency for competitive play?
 - [ ] Should eliminated players be able to chat?
 - [ ] Include ranked matchmaking in Phase 1 or Phase 2?
-- [ ] Support mobile players in local multiplayer (one per device)?
+- [x] Support mobile players in multiplayer? → **Yes, full mobile support with touch controls**
 - [ ] Add power-ups or keep classic Tetris rules only?
 
 ---
@@ -556,25 +687,34 @@ multiplayer (no room for 2+ boards + controls)
 
 ## Phase Breakdown
 
-### Phase 1: Local Multiplayer (Same Device)
+### Phase 1: Local Multiplayer (Same Device) - ⏭️ Skipped
 - 2-player split screen
 - Shared keyboard controls
 - Garbage mechanics
 - No networking required
 
-### Phase 2: Online Multiplayer
-- WebSocket server setup
+### Phase 2: Online Multiplayer - ✅ Implemented
+- WebSocket server setup (PartyKit)
 - Lobby system (create/join)
 - Room codes
 - 2-4 player support
 - Network sync
+- Garbage mechanics
+- Targeting modes
+
+### Phase 2.5: Mobile Multiplayer - 📋 Spec Ready
+- Responsive layout (stacked vertical on mobile)
+- Touch controls integration
+- Compact opponent boards (horizontal scroll)
+- Collapsed target selector
+- Mobile-optimized stats panel
 
 ### Phase 3: Polish & Features
-- Targeting modes
 - Spectator mode
 - Back-to-back bonuses
 - T-Spin detection
 - Player profiles/stats
+- Ranked matchmaking
 
 ---
 

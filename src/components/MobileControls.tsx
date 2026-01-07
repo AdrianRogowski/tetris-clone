@@ -111,7 +111,7 @@ export function MobileControls({
       {/* Bottom controls */}
       <div className="controls-bottom">
         {/* D-pad for movement */}
-        <div className="dpad">
+        <div className="dpad" data-testid="dpad">
           <button
             className={buttonClass('left')}
             onTouchStart={(e) => { e.preventDefault(); handleButtonStart('left', onLeft, true); }}
@@ -147,6 +147,7 @@ export function MobileControls({
         {/* Center: Hold button */}
         <button
           className={`${buttonClass('hold')} hold-btn`}
+          data-testid="hold-btn"
           onTouchStart={(e) => { e.preventDefault(); handleButtonStart('hold', onHold); }}
           onTouchEnd={handleButtonEnd}
         >
@@ -156,7 +157,7 @@ export function MobileControls({
         </button>
         
         {/* Action buttons */}
-        <div className="action-buttons">
+        <div className="action-buttons" data-testid="action-buttons">
           <button
             className={`${buttonClass('rotate')} rotate-btn`}
             onTouchStart={(e) => { e.preventDefault(); handleButtonStart('rotate', onRotate); }}
@@ -181,6 +182,7 @@ export function MobileControls({
       {/* Pause button - top right, below the Next preview */}
       <button
         className={`${buttonClass('pause')} pause-btn`}
+        data-testid="pause-btn"
         onTouchStart={(e) => { e.preventDefault(); handleButtonStart('pause', onPause); }}
         onTouchEnd={handleButtonEnd}
       >

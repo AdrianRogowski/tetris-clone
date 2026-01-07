@@ -18,7 +18,9 @@ This file links feature specifications to their tests and source components.
 | Feature Spec | Test Suite | Source File(s) | Status |
 |--------------|------------|----------------|--------|
 | `.specs/features/game/tetris-core.feature.md` | Multiple (see below) | `src/game/`, `src/components/` | ✅ |
-| `.specs/features/game/multiplayer.feature.md` | Multiple (see below) | `src/multiplayer/` | 🔴 Tests written, not implemented |
+| `.specs/features/game/multiplayer.feature.md` | Multiple (see below) | `src/multiplayer/` | ✅ Implemented |
+| `.specs/features/game/online-multiplayer.feature.md` | Network tests | `src/multiplayer/network/`, `party/` | ✅ Implemented |
+| `.specs/features/game/mobile-multiplayer.feature.md` | - | `src/components/multiplayer/` | 📝 Spec ready |
 
 ### Core Game Test Suites
 
@@ -30,15 +32,23 @@ This file links feature specifications to their tests and source components.
 | `.specs/test-suites/game/randomizer.tests.md` | `src/game/randomizer.test.ts` | 29 | ✅ 100% |
 | `.specs/test-suites/game/gameState.tests.md` | `src/game/gameState.test.ts` | 66 | ✅ 100% |
 
-### Multiplayer Test Suites (NEW - Failing)
+### Multiplayer Test Suites
 
 | Test Suite Doc | Test File | Tests | Status |
 |----------------|-----------|-------|--------|
-| `.specs/test-suites/multiplayer/garbage.tests.md` | `src/multiplayer/garbage.test.ts` | 22 | 🔴 0% |
-| `.specs/test-suites/multiplayer/targeting.tests.md` | `src/multiplayer/targeting.test.ts` | 20 | 🔴 0% |
-| `.specs/test-suites/multiplayer/multiplayerState.tests.md` | `src/multiplayer/multiplayerState.test.ts` | 27 | 🔴 0% |
-| `.specs/test-suites/multiplayer/localMultiplayer.tests.md` | `src/multiplayer/localMultiplayer.test.ts` | 25 | 🔴 0% |
-| `.specs/test-suites/multiplayer/lobby.tests.md` | `src/multiplayer/lobby.test.ts` | 38 | 🔴 0% |
+| `.specs/test-suites/multiplayer/garbage.tests.md` | `src/multiplayer/garbage.test.ts` | 22 | ✅ 100% |
+| `.specs/test-suites/multiplayer/targeting.tests.md` | `src/multiplayer/targeting.test.ts` | 20 | ✅ 100% |
+| `.specs/test-suites/multiplayer/multiplayerState.tests.md` | `src/multiplayer/multiplayerState.test.ts` | 27 | ✅ 100% |
+| `.specs/test-suites/multiplayer/localMultiplayer.tests.md` | `src/multiplayer/localMultiplayer.test.ts` | 25 | ✅ 100% |
+| `.specs/test-suites/multiplayer/lobby.tests.md` | `src/multiplayer/lobby.test.ts` | 38 | ✅ 100% |
+
+### Network Test Suites
+
+| Test Suite Doc | Test File | Tests | Status |
+|----------------|-----------|-------|--------|
+| - | `src/multiplayer/network/messages.test.ts` | - | ✅ |
+| - | `src/multiplayer/network/roomState.test.ts` | - | ✅ |
+| - | `src/multiplayer/network/client.test.ts` | - | ✅ |
 
 ---
 
@@ -55,17 +65,19 @@ This file links feature specifications to their tests and source components.
 | Overlay | `.specs/design-system/components/overlay.md` | `src/components/Overlay.tsx` | ✅ |
 | MobileControls | `.specs/design-system/components/mobile-controls.md` | `src/components/MobileControls.tsx` | ✅ |
 
-### Multiplayer Components (NEW - Stubs)
+### Multiplayer Components
 
 | Component | Doc File | Source File | Status |
 |-----------|----------|-------------|--------|
-| Lobby | `.specs/design-system/components/lobby.md` | `src/components/Lobby.tsx` | 📝 Stub |
-| PlayerCard | `.specs/design-system/components/player-card.md` | `src/components/PlayerCard.tsx` | 📝 Stub |
-| OpponentBoard | `.specs/design-system/components/opponent-board.md` | `src/components/OpponentBoard.tsx` | 📝 Stub |
-| GarbageIndicator | `.specs/design-system/components/garbage-indicator.md` | `src/components/GarbageIndicator.tsx` | 📝 Stub |
-| TargetSelector | `.specs/design-system/components/target-selector.md` | `src/components/TargetSelector.tsx` | 📝 Stub |
-| RoomCodeInput | `.specs/design-system/components/room-code-input.md` | `src/components/RoomCodeInput.tsx` | 📝 Stub |
-| ResultsScreen | `.specs/design-system/components/results-screen.md` | `src/components/ResultsScreen.tsx` | 📝 Stub |
+| OnlineGame | - | `src/components/multiplayer/OnlineGame.tsx` | ✅ |
+| MultiplayerMenu | - | `src/components/multiplayer/MultiplayerMenu.tsx` | ✅ |
+| Lobby | `.specs/design-system/components/lobby.md` | `src/components/multiplayer/Lobby.tsx` | ✅ |
+| OpponentBoard | `.specs/design-system/components/opponent-board.md` | `src/components/multiplayer/OpponentBoard.tsx` | ✅ |
+| GarbageIndicator | `.specs/design-system/components/garbage-indicator.md` | `src/components/multiplayer/GarbageIndicator.tsx` | ✅ |
+| PlayerCard | `.specs/design-system/components/player-card.md` | - | 📝 Not needed (inline in Lobby) |
+| TargetSelector | `.specs/design-system/components/target-selector.md` | - | 📝 Inline in OnlineGame |
+| RoomCodeInput | `.specs/design-system/components/room-code-input.md` | - | 📝 Inline in MultiplayerMenu |
+| ResultsScreen | `.specs/design-system/components/results-screen.md` | - | 📝 Uses Overlay |
 
 ### Hooks
 

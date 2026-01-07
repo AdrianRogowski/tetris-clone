@@ -3,9 +3,23 @@
  * Shows room code, player list, and start button
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { NetworkPlayer } from '../../multiplayer/network/messages';
 import type { ConnectionStatus } from '../../multiplayer/network/hooks/usePartySocket';
+
+// Hook to detect mobile viewport
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+}
 
 interface LobbyProps {
   roomCode: string;
@@ -39,6 +53,7 @@ export function Lobby({
   onStart,
   onLeave,
 }: LobbyProps) {
+  const isMobile = useIsMobile();
   const [copied, setCopied] = useState(false);
   const myPlayer = players.find(p => p.id === myPlayerId);
   const isReady = myPlayer?.isReady ?? false;
@@ -212,10 +227,10 @@ export function Lobby({
         )}
 
         {/* Actions */}
-        <div className="flex gap-4 justify-center">
+        <div className={`flex gap-4 ${isMobile ? 'flex-col' : 'justify-center'}`}>
           <button
             onClick={onLeave}
-            className="btn btn-secondary"
+            className={`btn btn-secondary ${isMobile ? 'w-full' : ''}`}
           >
             LEAVE
           </button>
@@ -223,7 +238,7 @@ export function Lobby({
           {!isHost ? (
             <button
               onClick={() => onReady(!isReady)}
-              className={`btn ${isReady ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isReady ? 'btn-secondary' : 'btn-primary'} ${isMobile ? 'w-full' : ''}`}
             >
               {isReady ? 'NOT READY' : 'READY'}
             </button>
@@ -231,13 +246,13 @@ export function Lobby({
             <>
               <button
                 onClick={() => onReady(!isReady)}
-                className={`btn ${isReady ? 'btn-secondary' : 'btn-primary'}`}
+                className={`btn ${isReady ? 'btn-secondary' : 'btn-primary'} ${isMobile ? 'w-full' : ''}`}
               >
                 {isReady ? 'NOT READY' : 'READY'}
               </button>
               <button
                 onClick={onStart}
-                className="btn btn-primary"
+                className={`btn btn-primary ${isMobile ? 'w-full' : ''}`}
                 disabled={!canStart}
                 style={{ opacity: canStart ? 1 : 0.5 }}
               >

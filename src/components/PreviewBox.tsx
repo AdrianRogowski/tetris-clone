@@ -5,6 +5,7 @@ import { Cell } from './Cell';
 interface PreviewBoxProps {
   pieces: TetrominoType[];
   count?: number;
+  compact?: boolean; // Horizontal layout for mobile
 }
 
 function MiniPiece({ type, scale = 1 }: { type: TetrominoType; scale?: number }) {
@@ -57,8 +58,33 @@ function MiniPiece({ type, scale = 1 }: { type: TetrominoType; scale?: number })
   );
 }
 
-export function PreviewBox({ pieces, count = 3 }: PreviewBoxProps) {
+export function PreviewBox({ pieces, count = 3, compact = false }: PreviewBoxProps) {
   const displayPieces = pieces.slice(0, count);
+  
+  // Compact horizontal layout for mobile
+  if (compact) {
+    return (
+      <div className="flex items-center gap-2">
+        <span 
+          className="font-display text-[8px]"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          NEXT
+        </span>
+        {displayPieces.map((piece, idx) => (
+          <div 
+            key={idx} 
+            className="flex items-center justify-center"
+            style={{ 
+              opacity: idx === 0 ? 1 : 0.5,
+            }}
+          >
+            <MiniPiece type={piece} scale={0.5} />
+          </div>
+        ))}
+      </div>
+    );
+  }
   
   return (
     <div className="panel">

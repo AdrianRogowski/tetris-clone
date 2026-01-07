@@ -292,7 +292,8 @@ describe('Message Serialization', () => {
       expect(types).toContain('eliminated');
       expect(types).toContain('setTarget');
       expect(types).toContain('leave');
-      expect(types.length).toBe(8);
+      expect(types).toContain('playAgain');
+      expect(types.length).toBe(9);
     });
 
     it('should return all server message types', () => {
@@ -301,7 +302,8 @@ describe('Message Serialization', () => {
       expect(types).toContain('playerJoined');
       expect(types).toContain('garbageAttack');
       expect(types).toContain('gameOver');
-      expect(types.length).toBe(14);
+      expect(types).toContain('roomReset');
+      expect(types.length).toBe(15);
     });
   });
 });

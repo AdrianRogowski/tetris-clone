@@ -16,7 +16,8 @@ export function GarbageIndicator({ pendingLines }: GarbageIndicatorProps) {
 
   return (
     <div 
-      className="absolute left-0 bottom-0 w-3 flex flex-col-reverse gap-px"
+      className="garbage-indicator absolute left-0 bottom-0 w-3 flex flex-col-reverse gap-px"
+      data-testid="garbage-indicator"
       style={{ 
         height: 20 * cellHeight, // Full board height
         transform: 'translateX(-100%)',

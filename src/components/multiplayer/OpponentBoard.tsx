@@ -14,6 +14,7 @@ interface OpponentBoardProps {
   isEliminated: boolean;
   placement: number | null;
   isDisconnected?: boolean;
+  mini?: boolean; // Extra small for mobile horizontal scroll
 }
 
 const PLAYER_COLORS: Record<string, string> = {
@@ -31,30 +32,33 @@ export function OpponentBoard({
   isEliminated,
   placement,
   isDisconnected,
+  mini = false,
 }: OpponentBoardProps) {
-  const cellSize = 8; // Mini cells
+  const cellSize = mini ? 5 : 8; // Even smaller for mobile mini view
   const boardWidth = 10;
-  const boardHeight = 20;
+  const boardHeight = mini ? 12 : 20; // Shorter for mini view
   const borderColor = PLAYER_COLORS[color] || 'var(--piece-i)';
 
   return (
     <div 
-      className="panel p-2"
+      className={`panel p-2 ${mini ? 'opponent-board-mini shrink-0' : ''}`}
+      data-mini={mini}
       style={{
         borderColor: isEliminated ? 'var(--color-text-dim)' : borderColor,
         opacity: isEliminated ? 0.5 : 1,
+        minWidth: mini ? 'auto' : undefined,
       }}
     >
       {/* Header */}
-      <div className="flex justify-between items-center mb-1">
+      <div className={`flex items-center mb-1 ${mini ? 'gap-1 justify-center' : 'justify-between'}`}>
         <span 
-          className="font-display text-xs truncate"
-          style={{ color: borderColor, maxWidth: '80px' }}
+          className={`font-display truncate ${mini ? 'text-[8px]' : 'text-xs'}`}
+          style={{ color: borderColor, maxWidth: mini ? '50px' : '80px' }}
         >
           {name}
         </span>
         <span 
-          className="text-xs"
+          className={mini ? 'text-[8px]' : 'text-xs'}
           style={{ color: 'var(--color-text-secondary)' }}
         >
           {score.toLocaleString()}
@@ -71,8 +75,8 @@ export function OpponentBoard({
           border: '1px solid var(--color-grid-line)',
         }}
       >
-        {/* Board cells */}
-        {board && board.slice(2).map((row, y) => (
+        {/* Board cells - skip more rows for mini view */}
+        {board && board.slice(mini ? 10 : 2).map((row, y) => (
           row.map((cell, x) => cell && (
             <div
               key={`${x}-${y}`}
