@@ -84,6 +84,10 @@ export function useMultiplayerSocket(options: UsePartySocketOptions): UsePartySo
       // Update room state
       setRoomState(prev => {
         const newState = applyServerMessage(prev, message);
+        console.log('[usePartySocket] State update:', {
+          prevPlayers: prev.players.length,
+          newPlayers: newState.players.length,
+        });
         return newState;
       });
 

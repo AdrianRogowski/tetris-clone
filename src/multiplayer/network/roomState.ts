@@ -73,6 +73,11 @@ export function createInitialRoomState(): RoomState {
 export function applyServerMessage(state: RoomState, message: ServerMessage): RoomState {
   switch (message.type) {
     case 'roomState':
+      console.log('[roomState] Applying roomState message:', {
+        roomCode: message.roomCode,
+        playerCount: message.players?.length,
+        players: message.players?.map(p => ({ id: p.id.slice(0, 8), name: p.name })),
+      });
       return {
         ...state,
         roomCode: message.roomCode,

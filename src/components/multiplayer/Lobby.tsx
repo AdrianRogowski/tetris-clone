@@ -56,6 +56,14 @@ export function Lobby({
   const isMobile = useIsMobile();
   const [copied, setCopied] = useState(false);
   const myPlayer = players.find(p => p.id === myPlayerId);
+  
+  // Debug logging
+  console.log('[Lobby] Rendering with:', {
+    roomCode,
+    playerCount: players.length,
+    players: players.map(p => ({ id: p.id.slice(0, 8), name: p.name })),
+    myPlayerId: myPlayerId?.slice(0, 8),
+  });
   const isReady = myPlayer?.isReady ?? false;
 
   // Copy room code to clipboard
