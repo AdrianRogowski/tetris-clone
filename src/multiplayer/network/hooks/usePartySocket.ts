@@ -54,22 +54,32 @@ export function useMultiplayerSocket(options: UsePartySocketOptions): UsePartySo
     host,
     room: roomCode,
     onOpen() {
+      console.log(`[PartyKit] Connected to room: ${roomCode} on host: ${host}`);
+      console.log(`[PartyKit] Socket ID: ${socket.id}`);
       setStatus('connected');
       // Send join message
       if (!hasJoined.current) {
         hasJoined.current = true;
+        console.log(`[PartyKit] Sending join message for: ${playerName}`);
         socket.send(serializeClientMessage({ type: 'join', playerName }));
       }
     },
     onClose() {
+      console.log(`[PartyKit] Disconnected from room: ${roomCode}`);
       setStatus('disconnected');
     },
-    onError() {
+    onError(error) {
+      console.error(`[PartyKit] Error:`, error);
       setStatus('error');
     },
     onMessage(event) {
+      console.log(`[PartyKit] Message received:`, event.data);
       const message = deserializeServerMessage(event.data);
-      if (!message) return;
+      if (!message) {
+        console.warn(`[PartyKit] Failed to deserialize message`);
+        return;
+      }
+      console.log(`[PartyKit] Parsed message type: ${message.type}`);
 
       // Update room state
       setRoomState(prev => {
@@ -80,10 +90,17 @@ export function useMultiplayerSocket(options: UsePartySocketOptions): UsePartySo
       // Handle specific messages
       switch (message.type) {
         case 'roomState':
+          console.log(`[PartyKit] Room state received:`, {
+            roomCode: message.roomCode,
+            hostId: message.hostId,
+            playerCount: message.players?.length,
+            players: message.players?.map((p: { id: string; name: string }) => ({ id: p.id, name: p.name })),
+          });
           // Find our player ID (last joined player is us)
           if (!myPlayerId && message.players.length > 0) {
             // The server sends us the full state after we join
             // Our ID matches the socket's ID
+            console.log(`[PartyKit] Setting myPlayerId to socket.id: ${socket.id}`);
             setMyPlayerId(socket.id);
             setRoomState(prev => ({ ...prev, myPlayerId: socket.id }));
           }
