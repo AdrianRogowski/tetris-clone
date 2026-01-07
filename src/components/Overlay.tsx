@@ -31,14 +31,14 @@ export function Overlay({ children, variant = 'modal' }: OverlayProps) {
 
 interface StartScreenProps {
   onStart: () => void;
+  onMultiplayer?: () => void;
 }
 
-export function StartScreen({ onStart }: StartScreenProps) {
+export function StartScreen({ onStart, onMultiplayer }: StartScreenProps) {
   return (
     <div 
       className="fixed inset-0 flex flex-col items-center justify-center gap-8 md:gap-12 px-4" 
       style={{ background: 'var(--color-void)' }}
-      onClick={onStart}
     >
       <div className="text-center">
         <h1 
@@ -55,15 +55,23 @@ export function StartScreen({ onStart }: StartScreenProps) {
       <div className="flex flex-col gap-4">
         <button 
           className="btn btn-primary text-xs md:text-sm py-4 px-8" 
-          onClick={(e) => { e.stopPropagation(); onStart(); }}
+          onClick={onStart}
         >
-          Start Game
+          Solo Game
         </button>
+        {onMultiplayer && (
+          <button 
+            className="btn btn-secondary text-xs md:text-sm py-4 px-8" 
+            onClick={onMultiplayer}
+          >
+            Multiplayer
+          </button>
+        )}
       </div>
       
       <div className="text-center text-xs" style={{ color: 'var(--color-text-dim)' }}>
-        <p className="animate-blink hidden md:block">Press ENTER to start</p>
-        <p className="animate-blink md:hidden">Tap anywhere to start</p>
+        <p className="animate-blink hidden md:block">Select a game mode</p>
+        <p className="animate-blink md:hidden">Tap a button to start</p>
       </div>
       
       <div 

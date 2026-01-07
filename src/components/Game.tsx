@@ -26,7 +26,11 @@ import { StartScreen, PauseScreen, GameOverScreen } from './Overlay';
 import { MobileControls } from './MobileControls';
 import { GameEvents } from './GameEvents';
 
-export function Game() {
+interface GameProps {
+  onMultiplayer?: () => void;
+}
+
+export function Game({ onMultiplayer }: GameProps) {
   const [gameState, setGameState] = useState<GameData>(() => createGameState());
   const isTouchDevice = useTouchDevice();
 
@@ -97,7 +101,7 @@ export function Game() {
   if (gameState.state === 'idle') {
     return (
       <>
-        <StartScreen onStart={handleStart} />
+        <StartScreen onStart={handleStart} onMultiplayer={onMultiplayer} />
         <div className="scanlines" />
         <div className="vignette" />
       </>

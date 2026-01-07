@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:party": "partykit dev",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:party\"",
     "build": "tsc -b && vite build",
+    "deploy:party": "partykit deploy",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
@@ -13,6 +16,8 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "partykit": "^0.0.115",
+    "partysocket": "^1.1.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
