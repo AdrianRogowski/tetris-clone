@@ -34,11 +34,14 @@ And the START GAME button should appear below (host only)
 ```gherkin
 Given I am playing multiplayer on a mobile device
 When the game starts
-Then opponent boards should appear at the top in a horizontal row
-And my game board should appear below, sized to fit screen
-And stats (score, level, lines) should be in a compact horizontal bar
-And touch controls should appear at the bottom
-And the target selector should be collapsed by default
+Then opponent boards should appear at the top in a contained panel
+And the "OPPONENTS" label should be inside the panel, not floating
+And my game board should appear centered, sized to fit screen
+And NO text should be cut off at screen edges
+And stats should show: SCORE prominently, then LVL/LINES/NEXT below
+And touch controls should appear at the bottom with adequate spacing
+And the target selector should be collapsed at the very bottom
+And there should be clear visual separation between sections
 ```
 
 ### Scenario: Touch controls work in multiplayer
@@ -58,10 +61,13 @@ And tapping the board should rotate
 ```gherkin
 Given I am playing multiplayer with 2+ opponents on mobile
 When viewing the opponent section
-Then each opponent should show a mini board (scaled down)
-And each opponent should show their name and score
+Then the opponent section should be a contained panel with border
+And "OPPONENTS" label should be inside the panel (top-left)
+And each opponent should show a mini board (5px cells, max 60px wide)
+And each opponent should show name (truncated if needed) and score
 And eliminated opponents should show an X overlay
 And the section should horizontally scroll if more than 2 opponents
+And opponent panels should not overflow screen bounds
 ```
 
 ### Scenario: Target selector on mobile
@@ -106,40 +112,66 @@ And the game board should scale appropriately
 
 ## UI Mockups
 
-### Mobile Game Layout (Portrait)
+### Mobile Game Layout (Portrait) - REVISED
+
+**Key requirements:**
+- All text must be fully visible (no cutoff)
+- Opponent bar should be contained within screen bounds
+- Stats centered and readable
+- Board should be centered and appropriately sized
+- Touch controls should not overlap with board
+
 ```
 ┌────────────────────────────────┐
-│  OPPONENTS                     │
-│  ┌──────┐ ┌──────┐ ┌──────┐   │  ← Horizontal scroll
-│  │P2 120│ │P3  45│ │P4 OUT│   │
-│  │▓▓▓▓▓▓│ │▓▓▓▓▓▓│ │  ╳   │   │
-│  │▓▓  ▓▓│ │▓    ▓│ │      │   │
-│  └──────┘ └──────┘ └──────┘   │
+│ ┌─ OPPONENTS ────────────────┐ │
+│ │ ┌────────┐  ┌────────┐     │ │  ← Single row with label
+│ │ │ P2     │  │ P3     │     │ │    inside the bar
+│ │ │ 1,240  │  │ 450    │ ... │ │
+│ │ │ ■■■■   │  │ ■■     │     │ │
+│ │ └────────┘  └────────┘     │ │
+│ └────────────────────────────┘ │
 ├────────────────────────────────┤
-│ 12,400 │ LVL 3 │ 24 LNS │NEXT│  ← Compact stats bar
+│        SCORE: 12,400           │  ← Score prominent, centered
+│   LVL 3  ●  24 LINES  ●  NEXT  │  ← Secondary stats + preview
+│               [■][▓][□]        │
 ├────────────────────────────────┤
-│┃┌────────────────────────────┐│
-│┃│                            ││
-│┃│                            ││
-│┃│      YOUR BOARD            ││  ← Main playable board
-│┃│                            ││
-│┃│         ▓▓▓                ││
-│┃│          ▓                 ││
-│┃│     ▓▓▓▓▓▓▓▓               ││
-│┃└────────────────────────────┘│
-│ ↑ Garbage indicator           │
+│                                │
+│    ┌────────────────────┐      │
+│   ┃│                    │      │  ← Garbage indicator
+│   ┃│                    │      │    attached to board
+│   ┃│    GAME BOARD      │      │
+│   ┃│                    │      │
+│   ┃│       ▓▓▓▓         │      │
+│   ┃│     ▓▓▓▓▓▓▓        │      │
+│    └────────────────────┘      │
+│                                │
 ├────────────────────────────────┤
-│  ┌───┐ ┌───┐ ┌───┐   ┌───┐   │
-│  │ ◄ │ │ ▼ │ │ ► │   │ ↻ │   │  ← Touch controls
-│  └───┘ └───┘ └───┘   └───┘   │
-│                               │
-│  ┌─────────┐  ┌───┐  ┌───┐   │
-│  │  HOLD   │  │ ⬇ │  │ ⏸ │   │
-│  └─────────┘  └───┘  └───┘   │
+│                                │
+│  [◀]  [▼]  [▶]    [↻]  [⬇]   │  ← D-pad left, actions right
+│                                │
+│     [HOLD]         [PAUSE]     │  ← Full-width utility buttons
+│                                │
 ├────────────────────────────────┤
-│  🎲 Random ▼                  │  ← Collapsed target selector
+│  🎲 Random ▼                   │  ← Target at very bottom
 └────────────────────────────────┘
 ```
+
+### Layout Specifications
+
+| Element | Height | Notes |
+|---------|--------|-------|
+| Opponent bar | ~80px | Fixed height, horizontal scroll if needed |
+| Stats bar | ~60px | Score large, others smaller |
+| Game board | Flexible | Fill remaining space, centered |
+| Touch controls | ~120px | Fixed, bottom anchored |
+| Target selector | ~44px | Collapsed state |
+
+### Spacing & Sizing
+
+- **Board cell size**: 16-18px (auto-calculated to fit)
+- **Opponent mini board**: 5px cells, 60px wide max
+- **Touch buttons**: 56px diameter minimum (touch target)
+- **Padding**: 8px standard, 4px tight areas
 
 ### Mobile Lobby
 ```
@@ -226,6 +258,20 @@ And the game board should scale appropriately
 
 ---
 
+## Known Issues (v1 - to fix)
+
+Based on real device testing (iPhone), these issues were identified:
+
+| Issue | Description | Fix |
+|-------|-------------|-----|
+| Score cutoff | Score text "32" was cut off on left edge | Add padding, center stats |
+| OPPONENTS label | Label floating awkwardly above panel | Move inside panel border |
+| Opponent board position | Mini board centered weirdly | Align left within scrollable container |
+| Stats bar cramped | LVL/LNS/NEXT all squished together | Redesign with score prominent, others below |
+| Visual hierarchy | Hard to quickly see important info | Score large, clear section borders |
+
+---
+
 ## Test Cases
 
 | ID | Test | Priority |
@@ -238,3 +284,5 @@ And the game board should scale appropriately
 | MOB-06 | Garbage indicator visible on mobile | Medium |
 | MOB-07 | Results screen is scrollable if needed | Low |
 | MOB-08 | Landscape orientation adapts layout | Low |
+| MOB-09 | No text cutoff on any screen edge | High |
+| MOB-10 | All sections have clear visual boundaries | Medium |

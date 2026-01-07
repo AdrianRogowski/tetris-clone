@@ -285,105 +285,145 @@ function ConnectedGame({
         className="mobile-game-layout min-h-screen flex flex-col"
         data-mobile="true"
         data-testid="mobile-game"
-        style={{ background: 'var(--color-void)' }}
+        style={{ 
+          background: 'var(--color-void)',
+          padding: '8px',
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+        }}
       >
-        {/* Mobile Opponents - horizontal scroll */}
+        {/* Mobile Opponents Panel - bordered container with label inside */}
         <div 
-          className="mobile-opponents flex gap-2 p-2 overflow-x-auto"
-          data-testid="mobile-opponents"
+          className="mobile-opponents-panel"
+          data-testid="mobile-opponents-panel"
           style={{ 
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
+            border: '1px solid var(--color-grid-line)',
+            borderRadius: '8px',
+            background: 'var(--color-chrome)',
+            padding: '8px',
+            marginBottom: '8px',
           }}
         >
           <p 
-            className="font-display text-xs shrink-0 self-center px-2"
+            className="opponents-label font-display text-xs mb-2"
+            data-testid="opponents-label"
             style={{ color: 'var(--color-text-secondary)' }}
           >
             OPPONENTS
           </p>
-          {opponents.map((opponent) => (
-            <OpponentBoard
-              key={opponent.playerId}
-              playerId={opponent.playerId}
-              name={opponent.name}
-              color={opponent.color}
-              board={opponent.board}
-              score={opponent.score}
-              isEliminated={opponent.isEliminated}
-              placement={opponent.placement}
-              isDisconnected={!opponent.isConnected}
-              mini
-            />
-          ))}
-          {opponents.length === 0 && (
-            <p 
-              className="text-xs self-center px-4"
-              style={{ color: 'var(--color-text-dim)' }}
-            >
-              Waiting...
-            </p>
-          )}
+          <div 
+            className="mobile-opponents flex gap-2 overflow-x-auto"
+            data-testid="mobile-opponents"
+            style={{ 
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
+            {opponents.map((opponent) => (
+              <OpponentBoard
+                key={opponent.playerId}
+                playerId={opponent.playerId}
+                name={opponent.name}
+                color={opponent.color}
+                board={opponent.board}
+                score={opponent.score}
+                isEliminated={opponent.isEliminated}
+                placement={opponent.placement}
+                isDisconnected={!opponent.isConnected}
+                mini
+              />
+            ))}
+            {opponents.length === 0 && (
+              <p 
+                className="text-xs px-2"
+                style={{ color: 'var(--color-text-dim)' }}
+              >
+                Waiting for players...
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Stats Bar */}
+        {/* Mobile Stats Bar - Score prominent, then secondary info */}
         <div 
-          className="mobile-stats-bar flex justify-between items-center px-3 py-2"
+          className="mobile-stats-bar flex flex-col items-center py-2 px-3"
           data-testid="mobile-stats"
-          style={{ background: 'var(--color-chrome)' }}
+          style={{ 
+            background: 'var(--color-chrome)',
+            borderRadius: '8px',
+            marginBottom: '8px',
+          }}
         >
-          <div className="flex gap-4">
-            <div className="text-center">
-              <span className="font-display text-lg" style={{ color: 'var(--color-accent-primary)' }}>
-                {gameState.score.toLocaleString()}
-              </span>
-            </div>
-            <div className="text-center">
-              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>LVL </span>
+          {/* Score - prominent, centered */}
+          <div 
+            className="mobile-score text-2xl font-display mb-1"
+            data-testid="mobile-score"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            {gameState.score.toLocaleString()}
+          </div>
+          
+          {/* Secondary stats row */}
+          <div className="flex items-center justify-center gap-4 w-full">
+            <div className="flex items-center gap-1">
+              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>LVL</span>
               <span className="font-display text-sm" style={{ color: 'var(--color-accent-gold)' }}>
                 {gameState.level}
               </span>
             </div>
-            <div className="text-center">
+            <span style={{ color: 'var(--color-grid-line)' }}>•</span>
+            <div className="flex items-center gap-1">
               <span className="font-display text-sm" style={{ color: 'var(--color-text-primary)' }}>
                 {gameState.lines}
               </span>
-              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}> LNS</span>
+              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>LINES</span>
+            </div>
+            <span style={{ color: 'var(--color-grid-line)' }}>•</span>
+            <div className="flex items-center gap-1">
+              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>NEXT</span>
+              <PreviewBox pieces={gameState.nextPieces} count={3} compact />
             </div>
           </div>
-          <PreviewBox pieces={gameState.nextPieces} count={3} compact />
         </div>
 
         {/* Main Board Area */}
-        <div className="flex-1 flex items-center justify-center p-2">
+        <div className="flex-1 flex items-center justify-center">
           <div className="relative" data-testid="game-board">
             <GarbageIndicator pendingLines={roomState.pendingGarbage} data-testid="garbage-indicator" />
             <GameBoard 
               board={gameState.board}
               currentPiece={gameState.currentPiece}
               ghostPosition={ghostPosition}
-              cellSize={18}
+              cellSize={16}
             />
           </div>
         </div>
 
         {/* Mobile Touch Controls */}
-        <MobileControls
-          onLeft={handleMobileLeft}
-          onRight={handleMobileRight}
-          onDown={handleMobileDown}
-          onRotate={handleMobileRotate}
-          onHardDrop={handleMobileHardDrop}
-          onHold={handleMobileHold}
-          onPause={handleMobilePause}
-        />
+        <div style={{ marginTop: '8px' }}>
+          <MobileControls
+            onLeft={handleMobileLeft}
+            onRight={handleMobileRight}
+            onDown={handleMobileDown}
+            onRotate={handleMobileRotate}
+            onHardDrop={handleMobileHardDrop}
+            onHold={handleMobileHold}
+            onPause={handleMobilePause}
+          />
+        </div>
 
-        {/* Collapsed Target Selector */}
+        {/* Collapsed Target Selector - at very bottom */}
         <div 
-          className="target-selector-collapsed p-2"
+          className="target-selector-collapsed"
           data-collapsed={!targetExpanded}
-          style={{ background: 'var(--color-chrome)' }}
+          data-testid="target-selector"
+          style={{ 
+            background: 'var(--color-chrome)',
+            borderRadius: '8px',
+            padding: '8px',
+            marginTop: '8px',
+          }}
         >
           <button
             onClick={() => setTargetExpanded(!targetExpanded)}

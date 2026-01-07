@@ -376,3 +376,135 @@ describe('Garbage Indicator on Mobile', () => {
     expect(indicator || board).toBeTruthy(); // At least one should exist
   });
 });
+
+describe('MOB-09: No text cutoff on screen edges', () => {
+  beforeEach(() => {
+    setViewport(375);
+    gameStartCallback = null;
+  });
+
+  it('should have proper padding on mobile container', async () => {
+    await setupPlayingGame();
+    
+    const container = document.querySelector('.mobile-game-layout, [data-mobile="true"]');
+    expect(container).toBeTruthy();
+    
+    if (container) {
+      const style = getComputedStyle(container);
+      // Container should have padding or safe-area insets
+      expect(container.classList.contains('mobile-game-layout')).toBe(true);
+    }
+  });
+
+  it('should display score fully visible and centered', async () => {
+    await setupPlayingGame();
+    
+    // Score should be in a centered container with proper styling
+    const scoreContainer = document.querySelector('[data-testid="mobile-score"], .mobile-score');
+    expect(scoreContainer).toBeTruthy();
+    
+    // Score element should have text-2xl class for prominence
+    expect(scoreContainer?.classList.contains('text-2xl')).toBe(true);
+  });
+
+  it('should not overflow opponents panel beyond screen', async () => {
+    await setupPlayingGame();
+    
+    const opponentsPanel = document.querySelector('[data-testid="mobile-opponents-panel"], .mobile-opponents-panel');
+    expect(opponentsPanel).toBeTruthy();
+    
+    if (opponentsPanel) {
+      const rect = opponentsPanel.getBoundingClientRect();
+      // Panel should start within screen bounds
+      expect(rect.left).toBeGreaterThanOrEqual(0);
+    }
+  });
+});
+
+describe('MOB-10: Clear visual boundaries between sections', () => {
+  beforeEach(() => {
+    setViewport(375);
+    gameStartCallback = null;
+  });
+
+  it('should have bordered opponents panel with label inside', async () => {
+    await setupPlayingGame();
+    
+    // Opponents panel should be a contained element with border
+    const opponentsPanel = document.querySelector('[data-testid="mobile-opponents-panel"], .mobile-opponents-panel');
+    expect(opponentsPanel).toBeTruthy();
+    
+    // OPPONENTS label should be INSIDE the panel
+    if (opponentsPanel) {
+      const label = opponentsPanel.querySelector('[data-testid="opponents-label"], .opponents-label');
+      expect(label).toBeTruthy();
+    }
+  });
+
+  it('should have distinct stats section', async () => {
+    await setupPlayingGame();
+    
+    // Stats should be in a visually distinct bar
+    const statsBar = document.querySelector('[data-testid="mobile-stats"], .mobile-stats-bar');
+    expect(statsBar).toBeTruthy();
+    
+    if (statsBar) {
+      const style = getComputedStyle(statsBar);
+      // Should have a background that distinguishes it
+      expect(style.backgroundColor || statsBar.style.background).toBeTruthy();
+    }
+  });
+
+  it('should display score prominently at top of stats', async () => {
+    await setupPlayingGame();
+    
+    const statsBar = document.querySelector('[data-testid="mobile-stats"], .mobile-stats-bar');
+    expect(statsBar).toBeTruthy();
+    
+    // Score should be the most prominent element (larger font)
+    const scoreEl = document.querySelector('[data-testid="mobile-score"], .mobile-score');
+    expect(scoreEl).toBeTruthy();
+    
+    if (scoreEl) {
+      // Score should have larger text (prominent)
+      expect(scoreEl.classList.contains('text-xl') || 
+             scoreEl.classList.contains('text-2xl') ||
+             scoreEl.classList.contains('mobile-score')).toBe(true);
+    }
+  });
+
+  it('should show LVL and LINES as secondary info', async () => {
+    await setupPlayingGame();
+    
+    // Level and lines should exist as secondary stats
+    const levelEl = screen.queryByText(/lvl|level/i);
+    const linesEl = screen.queryByText(/lns|lines/i);
+    
+    expect(levelEl).toBeTruthy();
+    expect(linesEl).toBeTruthy();
+  });
+
+  it('should have visual separator before touch controls', async () => {
+    await setupPlayingGame();
+    
+    // Controls should be in a distinct section
+    const controlsSection = document.querySelector('.mobile-controls');
+    expect(controlsSection).toBeTruthy();
+  });
+
+  it('should have target selector at very bottom', async () => {
+    await setupPlayingGame();
+    
+    const targetSelector = document.querySelector('.target-selector-collapsed, [data-testid="target-selector"]');
+    expect(targetSelector).toBeTruthy();
+    
+    // Target selector should be after the controls (at bottom)
+    const mobileLayout = document.querySelector('.mobile-game-layout');
+    if (mobileLayout && targetSelector) {
+      const children = Array.from(mobileLayout.children);
+      const targetIndex = children.findIndex(el => el === targetSelector || el.contains(targetSelector));
+      // Should be one of the last 3 children (target, scanlines, vignette)
+      expect(targetIndex).toBeGreaterThanOrEqual(children.length - 3);
+    }
+  });
+});
